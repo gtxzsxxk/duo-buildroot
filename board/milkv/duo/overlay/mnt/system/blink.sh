@@ -1,19 +1,19 @@
 #!/bin/sh
 
-LED_GPIO=/sys/class/gpio/gpio440
+CONFIG=/etc/milkv-duo.conf
+source ${CONFIG}
 
-if test -d $LED_GPIO; then
-    echo "GPIO440 already exported"
+if test -d ${LED_PATH}; then
+    echo "GPIO${LED_GPIO} already exported"
 else
-    echo 440 > /sys/class/gpio/export
+    (echo ${LED_GPIO} >/sys/class/gpio/export) >/dev/null 2>&1
 fi
 
-echo out > $LED_GPIO/direction
+(echo out >${LED_PATH}/direction) >/dev/null 2>&1
 
 while true; do
-    echo 0 > $LED_GPIO/value
+    (echo 0 >${LED_PATH}/value) >/dev/null 2>&1
     sleep 0.5
-    echo 1 > $LED_GPIO/value
+    (echo 1 >${LED_PATH}/value) >/dev/null 2>&1
     sleep 0.5
 done
-
