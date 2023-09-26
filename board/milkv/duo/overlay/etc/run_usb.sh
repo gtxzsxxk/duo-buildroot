@@ -1,32 +1,5 @@
-CLASS=acm
-VID=0x3346
-PID=0x1003
-MSC_PID=0x1008
-RNDIS_PID=0x1009
-UVC_PID=0x100A
-UAC_PID=0x100B
-ADB_VID=0x18D1
-ADB_PID=0x4EE0
-ADB_PID_M1=0x4EE2
-ADB_PID_M2=0x4EE4
-MANUFACTURER="Cvitek"
-PRODUCT="USB Com Port"
-PRODUCT_RNDIS="RNDIS"
-PRODUCT_UVC="UVC"
-PRODUCT_UAC="UAC"
-PRODUCT_ADB="ADB"
-ADBD_PATH=/usr/bin/
-SERIAL="0123456789"
-MSC_FILE=$3
-CVI_DIR=/tmp/usb
-CVI_GADGET=$CVI_DIR/usb_gadget/cvitek
-CVI_FUNC=$CVI_GADGET/functions
-FUNC_NUM=0
-MAX_EP_NUM=4
-TMP_NUM=0
-INTF_NUM=0
-EP_IN=0
-EP_OUT=0
+CONFIG=/etc/milkv-duo.conf
+source ${CONFIG}
 
 case "$2" in
   acm)
@@ -154,66 +127,66 @@ probe() {
     # Create gadget dev
     mkdir $CVI_GADGET
     # Set the VID and PID
-    echo $VID >$CVI_GADGET/idVendor
-    echo $PID >$CVI_GADGET/idProduct
+    ${DUO_WRITE} $VID >$CVI_GADGET/idVendor
+    ${DUO_WRITE} $PID >$CVI_GADGET/idProduct
     # Set the product information string
     mkdir $CVI_GADGET/strings/0x409
-    echo $MANUFACTURER>$CVI_GADGET/strings/0x409/manufacturer
-    echo $PRODUCT>$CVI_GADGET/strings/0x409/product
-    echo $SERIAL>$CVI_GADGET/strings/0x409/serialnumber
+    ${DUO_WRITE} $MANUFACTURER>$CVI_GADGET/strings/0x409/manufacturer
+    ${DUO_WRITE} $PRODUCT>$CVI_GADGET/strings/0x409/product
+    ${DUO_WRITE} $SERIAL>$CVI_GADGET/strings/0x409/serialnumber
     # Set the USB configuration
     mkdir $CVI_GADGET/configs/c.1
     mkdir $CVI_GADGET/configs/c.1/strings/0x409
-    echo "config1">$CVI_GADGET/configs/c.1/strings/0x409/configuration
+    ${DUO_WRITE} "config1">$CVI_GADGET/configs/c.1/strings/0x409/configuration
     # Set the MaxPower of USB descriptor
-    echo 120 >$CVI_GADGET/configs/c.1/MaxPower
+    ${DUO_WRITE} 120 >$CVI_GADGET/configs/c.1/MaxPower
   fi
   # get current functions number
   calc_func
   # assign the class code for composite device
   if [ ! $FUNC_NUM -eq 0 ]; then
-    echo 0xEF >$CVI_GADGET/bDeviceClass
-    echo 0x02 >$CVI_GADGET/bDeviceSubClass
-    echo 0x01 >$CVI_GADGET/bDeviceProtocol
+    ${DUO_WRITE} 0xEF >$CVI_GADGET/bDeviceClass
+    ${DUO_WRITE} 0x02 >$CVI_GADGET/bDeviceSubClass
+    ${DUO_WRITE} 0x01 >$CVI_GADGET/bDeviceProtocol
   fi
   # resource check
   res_check
   # create the desired function
   if [ "$CLASS" = "ffs.adb" ] ; then
     # adb shall be the last function to probe. Override the pid/vid
-    echo $VID >$CVI_GADGET/idVendor
-    echo $PID >$CVI_GADGET/idProduct
+    ${DUO_WRITE} $VID >$CVI_GADGET/idVendor
+    ${DUO_WRITE} $PID >$CVI_GADGET/idProduct
     # choose pid for different function number
     if [ $INTF_NUM -eq 1 ]; then
-      echo $ADB_PID_M1 >$CVI_GADGET/idProduct
+      ${DUO_WRITE} $ADB_PID_M1 >$CVI_GADGET/idProduct
     fi
     if [ $INTF_NUM -eq 2 ]; then
-      echo $ADB_PID_M2 >$CVI_GADGET/idProduct
+      ${DUO_WRITE} $ADB_PID_M2 >$CVI_GADGET/idProduct
     fi
     mkdir $CVI_GADGET/functions/$CLASS
   else
     mkdir $CVI_GADGET/functions/$CLASS.usb$FUNC_NUM
   fi
   if [ "$CLASS" = "mass_storage" ] ; then
-    echo $MSC_FILE >$CVI_GADGET/functions/$CLASS.usb$FUNC_NUM/lun.0/file
+    ${DUO_WRITE} $MSC_FILE >$CVI_GADGET/functions/$CLASS.usb$FUNC_NUM/lun.0/file
   fi
   if [ "$CLASS" = "rndis" ] ; then
     #OS STRING
-    echo 1 >$CVI_GADGET/os_desc/use
-    echo 0xcd >$CVI_GADGET/os_desc/b_vendor_code
-    echo MSFT100 >$CVI_GADGET/os_desc/qw_sign
+    ${DUO_WRITE} 1 >$CVI_GADGET/os_desc/use
+    ${DUO_WRITE} 0xcd >$CVI_GADGET/os_desc/b_vendor_code
+    ${DUO_WRITE} MSFT100 >$CVI_GADGET/os_desc/qw_sign
     #COMPATIBLE ID
-    echo RNDIS >$CVI_FUNC/rndis.usb$FUNC_NUM/os_desc/interface.rndis/compatible_id
+    ${DUO_WRITE} RNDIS >$CVI_FUNC/rndis.usb$FUNC_NUM/os_desc/interface.rndis/compatible_id
     #MAKE c.1 THE ONE ASSOCIATED WITH OS DESCRIPTORS
     ln -s $CVI_GADGET/configs/c.1 $CVI_GADGET/os_desc
     #MAKE "Icons" EXTENDED PROPERTY
     mkdir $CVI_FUNC/rndis.usb$FUNC_NUM/os_desc/interface.rndis/Icons
-    echo 2 >$CVI_FUNC/rndis.usb$FUNC_NUM/os_desc/interface.rndis/Icons/type
-    echo "%SystemRoot%\\system32\\shell32.dll,-233" >$CVI_FUNC/rndis.usb$FUNC_NUM/os_desc/interface.rndis/Icons/data
+    ${DUO_WRITE} 2 >$CVI_FUNC/rndis.usb$FUNC_NUM/os_desc/interface.rndis/Icons/type
+    ${DUO_WRITE} "%SystemRoot%\\system32\\shell32.dll,-233" >$CVI_FUNC/rndis.usb$FUNC_NUM/os_desc/interface.rndis/Icons/data
     #MAKE "Label" EXTENDED PROPERTY
     mkdir $CVI_FUNC/rndis.usb$FUNC_NUM/os_desc/interface.rndis/Label
-    echo 1 >$CVI_FUNC/rndis.usb$FUNC_NUM/os_desc/interface.rndis/Label/type
-    echo "XYZ Device" >$CVI_FUNC/rndis.usb$FUNC_NUM/os_desc/interface.rndis/Label/data
+    ${DUO_WRITE} 1 >$CVI_FUNC/rndis.usb$FUNC_NUM/os_desc/interface.rndis/Label/type
+    ${DUO_WRITE} "XYZ Device" >$CVI_FUNC/rndis.usb$FUNC_NUM/os_desc/interface.rndis/Label/data
   fi
 
 }
@@ -242,7 +215,7 @@ start() {
   else
     # Start the gadget driver
     UDC=`ls /sys/class/udc/ | awk '{print $1}'`
-    echo ${UDC} >$CVI_GADGET/UDC
+    ${DUO_WRITE} ${UDC} >$CVI_GADGET/UDC
   fi
 }
 
@@ -251,7 +224,7 @@ stop() {
     pkill adbd
     rm $CVI_GADGET/configs/c.1/ffs.adb
   else
-    echo "" >$CVI_GADGET/UDC
+    ${DUO_WRITE} "" >$CVI_GADGET/UDC
   fi
   find $CVI_GADGET/configs/ -name "*.usb*" | xargs rm -f
   rmdir $CVI_GADGET/configs/c.*/strings/0x409/
