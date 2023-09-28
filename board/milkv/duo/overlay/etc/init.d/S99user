@@ -34,6 +34,10 @@ case "$1" in
                 if [ -f $SYSTEMPATH/usb-host.sh ]; then
                         . $SYSTEMPATH/usb-host.sh &
                 fi
+        elif [ "$DUO_USB_FUNC" == "MASS-STORAGE" ]; then
+                if [ -f $SYSTEMPATH/usb-mass-storage.sh ]; then
+                        . $SYSTEMPATH/usb-mass-storage.sh &
+                fi
         fi
 
         if [ -f $USERDATAPATH/auto.sh ]; then
