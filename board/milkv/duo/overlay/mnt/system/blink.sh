@@ -19,6 +19,7 @@ while true; do
         ${DUO_WRITE} 1 >${LED_PATH}/value
         sleep 0.5
     else
+        ${DUO_WRITE} 0 >${LED_PATH}/value
         sleep 2
     fi
 done
