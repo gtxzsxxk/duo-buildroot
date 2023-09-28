@@ -12,8 +12,13 @@ fi
 ${DUO_WRITE} out >${LED_PATH}/direction
 
 while true; do
-    ${DUO_WRITE} 0 >${LED_PATH}/value
-    sleep 0.5
-    ${DUO_WRITE} 1 >${LED_PATH}/value
-    sleep 0.5
+    source ${CONFIG}
+    if [ "$ENABLE_BLINK" == "1" ]; then
+        ${DUO_WRITE} 0 >${LED_PATH}/value
+        sleep 0.5
+        ${DUO_WRITE} 1 >${LED_PATH}/value
+        sleep 0.5
+    else
+        sleep 2
+    fi
 done
