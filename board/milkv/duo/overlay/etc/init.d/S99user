@@ -6,6 +6,9 @@ ${CVI_SHOPTS}
 export USERDATAPATH=/mnt/data/
 export SYSTEMPATH=/mnt/system/
 
+CONFIG=/etc/milkv-duo.conf
+source ${CONFIG}
+
 case "$1" in
   start)
         echo "init mpp system..."
@@ -23,8 +26,14 @@ case "$1" in
                 . $SYSTEMPATH/blink.sh &
         fi
 
-	if [ -f $SYSTEMPATH/usb.sh ]; then
-                . $SYSTEMPATH/usb.sh &
+        if [ "$DUO_USB_FUNC" == "RNDIS" ]; then
+                if [ -f $SYSTEMPATH/usb-rndis.sh ]; then
+                        . $SYSTEMPATH/usb-rndis.sh &
+                fi
+        elif [ "$DUO_USB_FUNC" == "HOST" ]; then
+                if [ -f $SYSTEMPATH/usb-host.sh ]; then
+                        . $SYSTEMPATH/usb-host.sh &
+                fi
         fi
 
         if [ -f $USERDATAPATH/auto.sh ]; then
