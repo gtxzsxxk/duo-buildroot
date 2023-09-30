@@ -28,6 +28,8 @@ $  make milkv_duo_musl_riscv64_defconfig
 $  make
 ```
 
+The format is `milkv_duo_{{C Library}}_{{Compile Toolchain}}_defconfig`.
+
 ## Usage of the rootfs
 
 Find the `rootfs.tar.xz` in `output/images`, mount the `mmcblk0p2` part to a directory. Then:
