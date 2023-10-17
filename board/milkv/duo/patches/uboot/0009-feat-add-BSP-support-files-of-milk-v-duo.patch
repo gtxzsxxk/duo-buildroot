@@ -1,7 +1,7 @@
 From b902bca4a4740d73c53a2290a2d9c0b3d058fc04 Mon Sep 17 00:00:00 2001
 From: Hanyuan Zhao <hanyuan-z@qq.com>
 Date: Mon, 16 Oct 2023 19:09:11 +0800
-Subject: [PATCH 9/9] feat: add BSP support files of milk-v duo
+Subject: [PATCH 09/10] feat: add BSP support files of milk-v duo
 
 Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
 ---

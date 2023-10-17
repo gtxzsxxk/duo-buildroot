@@ -1,8 +1,8 @@
 From 909f5d4edb584d2868726ca5ada3be4a6c5b7492 Mon Sep 17 00:00:00 2001
 From: "wangliang.wang" <wangliang.wang@sophgo.com>
 Date: Fri, 10 Mar 2023 00:06:05 +0800
-Subject: [PATCH 2/9] [build] Upgrade the MMF SDK from V4.0.0 to V4.1.0 	1.
- Delete some useless files 	2. Add .gitignore file 	3. add cv181x board
+Subject: [PATCH 02/10] [build] Upgrade the MMF SDK from V4.0.0 to V4.1.0 
+ 1. Delete some useless files 	2. Add .gitignore file 	3. add cv181x board
  configs
 
 Change-Id: I1f09f71cfa2cc6ee9ab5d8ad3d3570a48a9e9ba3
@@ -24,7 +24,6 @@ Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
  delete mode 100644 doc/build/index.rst
  delete mode 100644 doc/build/source.rst
  delete mode 100644 doc/build/tools.rst
- delete mode 100644 tools/binman/test/descriptor.bin
  delete mode 100644 tools/patman/test/0000-cover-letter.patch
  delete mode 100644 tools/patman/test/0001-pci-Correct-cast-for-sandbox.patch
  delete mode 100644 tools/patman/test/0002-fdt-Correct-cast-for-sandbox-in-fdtdec_setup_mem_siz.patch

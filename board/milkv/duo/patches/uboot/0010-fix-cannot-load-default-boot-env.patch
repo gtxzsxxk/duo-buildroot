@@ -1,0 +1,62 @@
+From 4da169ba89aad93dab95742761d477c10d668098 Mon Sep 17 00:00:00 2001
+From: Hanyuan Zhao <hanyuan-z@qq.com>
+Date: Tue, 17 Oct 2023 15:29:20 +0800
+Subject: [PATCH 10/10] fix: cannot load default boot env
+
+Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
+---
+ include/configs/cv180x-asic.h | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
+
+diff --git a/include/configs/cv180x-asic.h b/include/configs/cv180x-asic.h
+index 08b70193f..276681f97 100644
+--- a/include/configs/cv180x-asic.h
++++ b/include/configs/cv180x-asic.h
+@@ -179,7 +179,7 @@
+ #define CONFIG_GATEWAYIP		192.168.0.11
+ #define CONFIG_SERVERIP			192.168.56.101
+ 
+-#ifdef CONFIG_USE_DEFAULT_ENV
++#if 1
+ /* The following Settings are chip dependent */
+ /******************************************************************************/
+ 	#define UIMAG_ADDR	CVIMMAP_UIMAG_ADDR
+@@ -194,11 +194,7 @@
+ /* define common env */
+ /*******************************************************************************/
+ 	/* Config FDT_NO */
+-	#ifndef USE_HOSTCC
+-		#define FDT_NO __stringify(CVICHIP) "_" __stringify(CVIBOARD)
+-	#else
+-		#define FDT_NO ""
+-	#endif
++	#define FDT_NO CONFIG_DEFAULT_DEVICE_TREE
+ 
+ 	/* config root */
+ 	#ifdef CONFIG_NAND_SUPPORT
+@@ -283,18 +279,15 @@
+ 					"console=$consoledev,$baudrate $othbootargs;"
+ 
+ 	#define SD_BOOTM_COMMAND \
+-				SET_BOOTARGS \
++				"set bootargs root=/dev/mmcblk0p2 rootwait rw " \
++				"console=$consoledev,$baudrate earlycon=sbi loglevel=9 riscv.fwsz=0x80000" \
+ 				"echo Boot from SD ...;" \
+ 				"mmc dev 0 && fatload mmc 0 ${uImage_addr} boot.sd; " \
+ 				"if test $? -eq 0; then " \
+ 				UBOOT_VBOOT_BOOTM_COMMAND \
+ 				"fi;"
+-
+-	#ifndef CONFIG_SD_BOOT
+-		#define CONFIG_BOOTCOMMAND	SHOWLOGOCMD "cvi_update || run norboot || run nandboot ||run emmcboot"
+-	#else
+-		#define CONFIG_BOOTCOMMAND	SHOWLOGOCMD "run sdboot"
+-	#endif
++		
++	#define CONFIG_BOOTCOMMAND	SHOWLOGOCMD "run sdboot"
+ 
+ 	#if defined(CONFIG_NAND_SUPPORT)
+ 	/* For spi nand boot, need to reset DMA and its setting before exiting uboot */
+-- 
+2.34.1
+

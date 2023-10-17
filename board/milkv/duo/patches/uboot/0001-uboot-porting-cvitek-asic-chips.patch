@@ -1,7 +1,7 @@
 From 3a4bcfca2fce0e9d1f093b4c95dc77ebbc144ca0 Mon Sep 17 00:00:00 2001
 From: "sam.xiang" <sam.xiang@sophgo.com>
 Date: Wed, 22 Feb 2023 13:43:23 +0800
-Subject: [PATCH 1/9] [uboot] porting cvitek asic chips: 	1. add cvitek
+Subject: [PATCH 01/10] [uboot] porting cvitek asic chips: 	1. add cvitek
  folders to u-boot-2021.10 	2. add cv183x/cv182x part 	3. add
  cv181x/cv180x part
 
@@ -35824,7 +35824,7 @@ index 000000000..db3ef7fae
 +#define CONFIG_GATEWAYIP		192.168.0.11
 +#define CONFIG_SERVERIP			192.168.56.101
 +
-+#if 1 /* CONFIG_USE_DEFAULT_ENV */
++#ifdef CONFIG_USE_DEFAULT_ENV
 +/* The following Settings are chip dependent */
 +/******************************************************************************/
 +	#define UIMAG_ADDR	CVIMMAP_UIMAG_ADDR

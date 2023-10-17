@@ -1,7 +1,7 @@
 From 648a0d3ab042b20d5791b2111cb1b97d45e1e6ea Mon Sep 17 00:00:00 2001
 From: Hanyuan Zhao <hanyuan-z@qq.com>
 Date: Mon, 16 Oct 2023 19:06:50 +0800
-Subject: [PATCH 7/9] fix: devicetree source code and dtc settings
+Subject: [PATCH 07/10] fix: devicetree source code and dtc settings
 
 Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
 ---

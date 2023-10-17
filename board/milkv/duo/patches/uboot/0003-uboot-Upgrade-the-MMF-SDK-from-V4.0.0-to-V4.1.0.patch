@@ -1,8 +1,9 @@
 From 607778300cbb8f8df13830368081984308a4a1da Mon Sep 17 00:00:00 2001
 From: "wangliang.wang" <wangliang.wang@sophgo.com>
 Date: Fri, 10 Mar 2023 00:31:09 +0800
-Subject: [PATCH 3/9] [uboot] Upgrade the MMF SDK from V4.0.0 to V4.1.0 	1. add
- cv181x functions 	2. Delete some useless files and add .gitignore
+Subject: [PATCH 03/10] [uboot] Upgrade the MMF SDK from V4.0.0 to V4.1.0 
+ 1. add cv181x functions 	2. Delete some useless files and add
+ .gitignore
 
 Change-Id: Iea2b2fa43b5a1152e5e99fb32b88f8d2c249251a
 Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
