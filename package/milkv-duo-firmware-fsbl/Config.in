@@ -1,5 +1,6 @@
 config BR2_PACKAGE_MILKV_DUO_FIRMWARE_FSBL
 	bool "milkv-duo-firmware-fsbl"
+	depends on BR2_PACKAGE_HOST_MTOOLS
 	help
 	  This package is obtained from
 	  https://github.com/gtxzsxxk/milkv-duo-firmware-fsbl
