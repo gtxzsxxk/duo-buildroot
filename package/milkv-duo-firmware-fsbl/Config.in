@@ -1,0 +1,11 @@
+config BR2_PACKAGE_MILKV_DUO_FIRMWARE_FSBL
+	bool "milkv-duo-firmware-fsbl"
+	help
+	  This package is obtained from
+	  https://github.com/gtxzsxxk/milkv-duo-firmware-fsbl
+	  from which we download the first stage bootloader source and compile it,
+	  generating the atf bl2.bin. At the mean time, we will use the fiptool.py
+	  in this package to create the binary file fip.bin to pack the opensbi,
+	  u-boot and so on.
+
+	  https://github.com/gtxzsxxk/milkv-duo-firmware-fsbl
