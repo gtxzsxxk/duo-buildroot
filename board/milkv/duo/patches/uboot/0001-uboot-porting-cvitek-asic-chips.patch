@@ -35824,7 +35824,7 @@ index 000000000..db3ef7fae
 +#define CONFIG_GATEWAYIP		192.168.0.11
 +#define CONFIG_SERVERIP			192.168.56.101
 +
-+#ifdef CONFIG_USE_DEFAULT_ENV
++#if 1 /* CONFIG_USE_DEFAULT_ENV */
 +/* The following Settings are chip dependent */
 +/******************************************************************************/
 +	#define UIMAG_ADDR	CVIMMAP_UIMAG_ADDR
