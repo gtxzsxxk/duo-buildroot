@@ -3,6 +3,7 @@
 # milkv-duo-firmware-fsbl
 #
 ################################################################################
+
 MILKV_DUO_FIRMWARE_FSBL_VERSION = d13fa3826ee2747a52d03d8a014eb079163cf069
 MILKV_DUO_FIRMWARE_FSBL_SITE = $(call github,gtxzsxxk,milkv-duo-firmware-fsbl,$(MILKV_DUO_FIRMWARE_FSBL_VERSION))
 MILKV_DUO_FIRMWARE_FSBL_INSTALL_STAGING = YES
@@ -17,11 +18,11 @@ define MILKV_DUO_FIRMWARE_FSBL_BUILD_CMDS
 endef
 
 define MILKV_DUO_FIRMWARE_FSBL_INSTALL_STAGING_CMDS
-	$(INSTALL) -D -m 0755 $(@D)/build/cv180x/bl2.bin ${BINARIES_DIR}/bl2.bin
-	$(INSTALL) -D -m 0755 $(@D)/plat/cv180x/chip_conf.bin ${BINARIES_DIR}/chip_conf.bin
-	$(INSTALL) -D -m 0755 $(@D)/plat/cv180x/fiptool.py ${BINARIES_DIR}/fiptool.py
-	$(INSTALL) -D -m 0644 $(@D)/plat/cv180x/multi.its ${BINARIES_DIR}/multi.its
-	$(INSTALL) -D -m 0755 $(@D)/test/cv181x/ddr_param.bin ${BINARIES_DIR}/ddr_param.bin
+	$(INSTALL) -D -m 0755 $(@D)/build/cv180x/bl2.bin $(BINARIES_DIR)/bl2.bin
+	$(INSTALL) -D -m 0755 $(@D)/plat/cv180x/chip_conf.bin $(BINARIES_DIR)/chip_conf.bin
+	$(INSTALL) -D -m 0755 $(@D)/plat/cv180x/fiptool.py $(BINARIES_DIR)/fiptool.py
+	$(INSTALL) -D -m 0644 $(@D)/plat/cv180x/multi.its $(BINARIES_DIR)/multi.its
+	$(INSTALL) -D -m 0755 $(@D)/test/cv181x/ddr_param.bin $(BINARIES_DIR)/ddr_param.bin
 endef
 
 $(eval $(generic-package))
