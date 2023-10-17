@@ -1,0 +1,28 @@
+From 9a53769c53ca0e01ef16da1684ab7a4dfe333503 Mon Sep 17 00:00:00 2001
+From: Hanyuan Zhao <hanyuan-z@qq.com>
+Date: Mon, 16 Oct 2023 21:57:12 +0800
+Subject: [PATCH 1/3] fix: unknown thead CSR registers
+
+Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
+---
+ fsbl/lib/cpu/riscv/bl2_entrypoint.S | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/fsbl/lib/cpu/riscv/bl2_entrypoint.S b/fsbl/lib/cpu/riscv/bl2_entrypoint.S
+index 73443871e..2d3c53d0e 100644
+--- a/fsbl/lib/cpu/riscv/bl2_entrypoint.S
++++ b/fsbl/lib/cpu/riscv/bl2_entrypoint.S
+@@ -2,6 +2,10 @@
+ #include "csr.h"
+ #include <riscv/asm_macros.S>
+ 
++#define mxstatus 0x7c0
++#define mhcr 0x7c1
++#define mcor 0x7c2
++
+   .option norvc
+   .section .text.init,"ax",@progbits
+   .globl bl2_entrypoint
+-- 
+2.34.1
+

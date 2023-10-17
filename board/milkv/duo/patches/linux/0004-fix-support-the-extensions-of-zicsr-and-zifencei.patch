@@ -1,0 +1,39 @@
+From a0af270b0c4ef12a3eda0e4b6c7217dc28b5b9c2 Mon Sep 17 00:00:00 2001
+From: Hanyuan Zhao <hanyuan-z@qq.com>
+Date: Tue, 17 Oct 2023 09:17:20 +0800
+Subject: [PATCH 4/5] fix: support the extensions of zicsr and zifencei
+
+Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
+---
+ arch/riscv/Makefile | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+index 0889f9f47..2d68630cf 100644
+--- a/arch/riscv/Makefile
++++ b/arch/riscv/Makefile
+@@ -28,11 +28,6 @@ ifeq ($(CONFIG_ARCH_RV64I),y)
+ 	KBUILD_CFLAGS += -mabi=lp64
+ 	KBUILD_AFLAGS += -mabi=lp64
+ 
+-# workaround for C906 ldd performance issue
+-ifeq ($(CONFIG_ARCH_CVITEK),y)
+-	KBUILD_CFLAGS += -mno-ldd
+-endif
+-
+ 	KBUILD_LDFLAGS += -melf64lriscv
+ else
+ 	BITS := 32
+@@ -56,6 +51,9 @@ riscv-march-aflags-$(CONFIG_VECTOR_1_0)		:= $(riscv-march-aflags-y)v
+ riscv-march-aflags-$(CONFIG_VECTOR_0_7)		:= $(riscv-march-aflags-y)v0p7
+ riscv-march-aflags-$(CONFIG_RISCV_ISA_THEAD)	:= $(riscv-march-aflags-y)xthead
+ 
++riscv-march-cflags-y	:= $(riscv-march-cflags-y)_zicsr_zifencei
++riscv-march-aflags-y	:= $(riscv-march-aflags-y)_zicsr_zifencei
++
+ KBUILD_CFLAGS += -march=$(riscv-march-cflags-y) -Wa,-march=$(riscv-march-aflags-y)
+ KBUILD_AFLAGS += -march=$(riscv-march-aflags-y)
+ 
+-- 
+2.34.1
+
