@@ -22,9 +22,9 @@ jobs:
         sudo apt-get install -y which sed make binutils build-essential \
         patch gzip bzip2 perl \
         tar cpio unzip rsync file \
-        bc wget python ncurses5 \
-        bazaar cvs git mercurial \
-        rsync scp \
+        bc wget python2 python3 libncurses5 \
+        git \
+        rsync \
         android-tools-mkbootimg
 
     - name: Configure Buildroot
