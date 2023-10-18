@@ -1,0 +1,43 @@
+name: Milk-V Duo Buildroot CI
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Buildroot
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y sed make binutils build-essential \
+        fakeroot libncurses5-dev libssl-dev ccache bison flex \
+        patch gzip bzip2 perl \
+        tar cpio unzip rsync file \
+        bc wget python2 python3 \
+        git \
+        rsync \
+        android-tools-mkbootimg
+
+    - name: Configure Buildroot
+      run: make milkv_duo_musl_riscv64_defconfig
+
+    - name: Build
+      run: make
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: Milk-V Duo SD Card Images by Buildroot
+        path: |
+          output/images/rootfs.tar.xz
+          output/images/sdcard.img

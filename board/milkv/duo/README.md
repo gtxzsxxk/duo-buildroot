@@ -30,6 +30,10 @@ $  make
 
 The format is `milkv_duo_{{C Library}}_{{Compile Toolchain}}_defconfig`.
 
+## Usage of the sdcard.img
+
+The `sdcard.img` is in `output/images`, you can directly write the image into your TF card, which could automatically boot and load the USB as rndis function by default.
+
 ## Usage of the rootfs
 
 Find the `rootfs.tar.xz` in `output/images`, mount the `mmcblk0p2` part to a directory. Then:
