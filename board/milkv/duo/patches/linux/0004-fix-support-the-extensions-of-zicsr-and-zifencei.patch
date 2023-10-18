@@ -1,7 +1,7 @@
 From a0af270b0c4ef12a3eda0e4b6c7217dc28b5b9c2 Mon Sep 17 00:00:00 2001
 From: Hanyuan Zhao <hanyuan-z@qq.com>
 Date: Tue, 17 Oct 2023 09:17:20 +0800
-Subject: [PATCH 4/6] fix: support the extensions of zicsr and zifencei
+Subject: [PATCH 4/7] fix: support the extensions of zicsr and zifencei
 
 Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
 ---

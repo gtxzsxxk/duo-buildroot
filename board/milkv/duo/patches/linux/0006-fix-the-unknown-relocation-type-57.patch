@@ -1,7 +1,7 @@
 From b3fce2e1416141d1bf060519ee98d598cb76bcf3 Mon Sep 17 00:00:00 2001
 From: Hanyuan Zhao <hanyuan-z@qq.com>
 Date: Wed, 18 Oct 2023 20:18:43 +0800
-Subject: [PATCH 6/6] fix: the unknown relocation type 57
+Subject: [PATCH 6/7] fix: the unknown relocation type 57
 
 Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
 ---
