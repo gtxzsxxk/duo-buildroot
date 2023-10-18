@@ -1,0 +1,23 @@
+name: Makefile CI
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: configure
+      run: make milkv_duo_musl_riscv64_defconfig
+
+    - name: Install
+      run: make
