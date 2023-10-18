@@ -19,10 +19,11 @@ jobs:
     - name: Set up Buildroot
       run: |
         sudo apt-get update
-        sudo apt-get install -y which sed make binutils build-essential \
+        sudo apt-get install -y sed make binutils build-essential \
+        fakeroot libncurses5-dev libssl-dev ccache bison flex \
         patch gzip bzip2 perl \
         tar cpio unzip rsync file \
-        bc wget python2 python3 libncurses5 \
+        bc wget python2 python3 \
         git \
         rsync \
         android-tools-mkbootimg
