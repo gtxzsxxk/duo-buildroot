@@ -1,4 +1,4 @@
-name: Makefile CI
+name: Milk-V Duo Buildroot CI
 
 on:
   workflow_dispatch:
@@ -16,8 +16,27 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: configure
+    - name: Set up Buildroot
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y which sed make binutils build-essential \
+        patch gzip bzip2 perl \
+        tar cpio unzip rsync file \
+        bc wget python ncurses5 \
+        bazaar cvs git mercurial \
+        rsync scp \
+        android-tools-mkbootimg
+
+    - name: Configure Buildroot
       run: make milkv_duo_musl_riscv64_defconfig
 
-    - name: Install
+    - name: Build
       run: make
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: Milk-V Duo SD Card Images by Buildroot
+        path: |
+          output/images/rootfs.tar.xz
+          output/images/sdcard.img
