@@ -1,0 +1,40 @@
+From b3fce2e1416141d1bf060519ee98d598cb76bcf3 Mon Sep 17 00:00:00 2001
+From: Hanyuan Zhao <hanyuan-z@qq.com>
+Date: Wed, 18 Oct 2023 20:18:43 +0800
+Subject: [PATCH 6/6] fix: the unknown relocation type 57
+
+Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
+---
+ arch/riscv/kernel/module.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
+index 57ace9bdb..7605e6628 100644
+--- a/arch/riscv/kernel/module.c
++++ b/arch/riscv/kernel/module.c
+@@ -284,6 +284,14 @@ static int apply_r_riscv_sub64_rela(struct module *me, u32 *location,
+ 	return 0;
+ }
+ 
++static int apply_r_riscv_pcrel_32_rela(struct module *me, u32 *location,
++				    Elf_Addr v)
++{
++	ptrdiff_t offset = (void *)v - (void *)location;
++	*location = (*location & 0xffff0000) | (offset & 0x0000ffff);
++	return 0;
++}
++
+ static int (*reloc_handlers_rela[]) (struct module *me, u32 *location,
+ 				Elf_Addr v) = {
+ 	[R_RISCV_32]			= apply_r_riscv_32_rela,
+@@ -307,6 +315,7 @@ static int (*reloc_handlers_rela[]) (struct module *me, u32 *location,
+ 	[R_RISCV_ADD64]			= apply_r_riscv_add64_rela,
+ 	[R_RISCV_SUB32]			= apply_r_riscv_sub32_rela,
+ 	[R_RISCV_SUB64]			= apply_r_riscv_sub64_rela,
++	[R_RISCV_32_PCREL]		= apply_r_riscv_pcrel_32_rela,	
+ };
+ 
+ static inline int apply_calc_pcrel_lo12(Elf_Shdr *sechdrs, Elf_Rela *rel,
+-- 
+2.34.1
+
