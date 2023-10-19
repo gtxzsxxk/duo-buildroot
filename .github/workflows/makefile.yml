@@ -12,6 +12,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v3
+
     - name: Set up Buildroot
       run: |
         sudo apt-get update
@@ -30,10 +32,6 @@ jobs:
     - name: Build
       run: make
       
-  pack-image:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
     - name: Generate Milk-V Duo SD Card Image by Buildroot
       uses: actions/upload-artifact@v3
       with:
@@ -46,10 +44,6 @@ jobs:
         name: rootfs.tar.xz
         path: output/images/rootfs.tar.xz
         
-  release:
-    needs: pack-image
-    runs-on: ubuntu-latest
-    steps:
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
