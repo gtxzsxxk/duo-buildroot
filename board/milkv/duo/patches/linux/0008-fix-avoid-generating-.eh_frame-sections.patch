@@ -1,0 +1,27 @@
+From 71ec07305c933ca4d5b4c3ad86d4d56d8d93d693 Mon Sep 17 00:00:00 2001
+From: Hanyuan Zhao <hanyuan-z@qq.com>
+Date: Thu, 19 Oct 2023 16:18:57 +0800
+Subject: [PATCH 8/8] fix: avoid generating .eh_frame sections
+
+Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
+---
+ arch/riscv/Makefile | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+index 2d68630cf..53207b937 100644
+--- a/arch/riscv/Makefile
++++ b/arch/riscv/Makefile
+@@ -80,6 +80,9 @@ KBUILD_CFLAGS_MODULE += $(call cc-option,-mno-relax)
+ # architectures.  It's faster to have GCC emit only aligned accesses.
+ KBUILD_CFLAGS += $(call cc-option,-mstrict-align)
+ 
++# Avoid generating .eh_frame sections.
++KBUILD_CFLAGS += -fno-asynchronous-unwind-tables -fno-unwind-tables
++
+ # arch specific predefines for sparse
+ CHECKFLAGS += -D__riscv -D__riscv_xlen=$(BITS)
+ 
+-- 
+2.34.1
+

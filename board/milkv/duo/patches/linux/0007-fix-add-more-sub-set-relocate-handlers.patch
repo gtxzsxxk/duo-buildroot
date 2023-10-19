@@ -1,7 +1,7 @@
 From 1948a0b34b2478424bb00afc46032a92aecb7b6c Mon Sep 17 00:00:00 2001
 From: Hanyuan Zhao <hanyuan-z@qq.com>
 Date: Wed, 18 Oct 2023 20:57:20 +0800
-Subject: [PATCH 7/7] fix: add more sub set relocate handlers
+Subject: [PATCH 7/8] fix: add more sub set relocate handlers
 
 Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
 ---

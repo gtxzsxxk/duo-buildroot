@@ -1,7 +1,7 @@
 From 95dcbe5649005e7d52f99776a61768c895ff3ffd Mon Sep 17 00:00:00 2001
 From: "wangliang.wang" <wangliang.wang@sophgo.com>
 Date: Fri, 10 Mar 2023 00:26:01 +0800
-Subject: [PATCH 2/7] [linux] Upgrade the MMF SDK from V4.0.0 to V4.1.0 	1.
+Subject: [PATCH 2/8] [linux] Upgrade the MMF SDK from V4.0.0 to V4.1.0 	1.
  181x support secureboot 	2. add .gitignore
 
 Change-Id: I34cd45663d92eeb8e3b5ddfbf1a876111ce46bd1

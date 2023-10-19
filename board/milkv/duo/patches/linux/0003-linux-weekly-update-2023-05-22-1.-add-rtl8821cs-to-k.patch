@@ -1,7 +1,7 @@
 From 20dbb987e34aac93e217561ace73b391ff9e54e9 Mon Sep 17 00:00:00 2001
 From: "sam.xiang" <sam.xiang@sophgo.com>
 Date: Tue, 23 May 2023 21:14:49 +0800
-Subject: [PATCH 3/7] linux: weekly update 2023-05-22 1. add rtl8821cs to
+Subject: [PATCH 3/8] linux: weekly update 2023-05-22 1. add rtl8821cs to
  kconfig 2. Support icommsemi config
 
 Change-Id: I7b1a5fd4cfd7b2be4009180f9038e79ad8e2c7e8
