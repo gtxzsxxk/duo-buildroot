@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-MILKV_DUO_FIRMWARE_FSBL_VERSION = d13fa3826ee2747a52d03d8a014eb079163cf069
+MILKV_DUO_FIRMWARE_FSBL_VERSION = 4367d680c81e8ba2c9d48eb07cd8ba1e1c25d9b9
 MILKV_DUO_FIRMWARE_FSBL_SITE = $(call github,gtxzsxxk,milkv-duo-firmware-fsbl,$(MILKV_DUO_FIRMWARE_FSBL_VERSION))
 MILKV_DUO_FIRMWARE_FSBL_INSTALL_STAGING = YES
 MILKV_DUO_FIRMWARE_FSBL_DEPENDENCIES = host-python3 host-mtools
