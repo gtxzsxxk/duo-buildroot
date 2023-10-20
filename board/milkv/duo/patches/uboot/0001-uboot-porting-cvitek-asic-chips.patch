@@ -1,7 +1,7 @@
 From 3a4bcfca2fce0e9d1f093b4c95dc77ebbc144ca0 Mon Sep 17 00:00:00 2001
 From: "sam.xiang" <sam.xiang@sophgo.com>
 Date: Wed, 22 Feb 2023 13:43:23 +0800
-Subject: [PATCH 01/10] [uboot] porting cvitek asic chips: 	1. add cvitek
+Subject: [PATCH 01/11] [uboot] porting cvitek asic chips: 	1. add cvitek
  folders to u-boot-2021.10 	2. add cv183x/cv182x part 	3. add
  cv181x/cv180x part
 

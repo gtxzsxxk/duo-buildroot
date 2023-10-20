@@ -1,7 +1,7 @@
 From 607778300cbb8f8df13830368081984308a4a1da Mon Sep 17 00:00:00 2001
 From: "wangliang.wang" <wangliang.wang@sophgo.com>
 Date: Fri, 10 Mar 2023 00:31:09 +0800
-Subject: [PATCH 03/10] [uboot] Upgrade the MMF SDK from V4.0.0 to V4.1.0 
+Subject: [PATCH 03/11] [uboot] Upgrade the MMF SDK from V4.0.0 to V4.1.0 
  1. add cv181x functions 	2. Delete some useless files and add
  .gitignore
 

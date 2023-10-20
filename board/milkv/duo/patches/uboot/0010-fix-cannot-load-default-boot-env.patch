@@ -1,7 +1,7 @@
 From 4da169ba89aad93dab95742761d477c10d668098 Mon Sep 17 00:00:00 2001
 From: Hanyuan Zhao <hanyuan-z@qq.com>
 Date: Tue, 17 Oct 2023 15:29:20 +0800
-Subject: [PATCH 10/10] fix: cannot load default boot env
+Subject: [PATCH 10/11] fix: cannot load default boot env
 
 Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
 ---

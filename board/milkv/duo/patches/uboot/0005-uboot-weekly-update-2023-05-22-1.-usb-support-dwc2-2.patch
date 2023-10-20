@@ -1,7 +1,7 @@
 From cf903f273bcbf4a082da60049382eed89fe1a00c Mon Sep 17 00:00:00 2001
 From: "sam.xiang" <sam.xiang@sophgo.com>
 Date: Tue, 23 May 2023 23:23:54 +0800
-Subject: [PATCH 05/10] uboot: weekly update 2023-05-22 1. usb support dwc2 2.
+Subject: [PATCH 05/11] uboot: weekly update 2023-05-22 1. usb support dwc2 2.
  recalculate dsi_timing table
 
 Change-Id: I0d2b9ae942ede724c30eb715a35ab3f6276a2c81

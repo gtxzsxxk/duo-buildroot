@@ -1,7 +1,7 @@
 From d606d31f860f9bc271ae5fcf84996820da8f4141 Mon Sep 17 00:00:00 2001
 From: "sam.xiang" <sam.xiang@sophgo.com>
 Date: Sat, 11 Mar 2023 00:06:51 +0800
-Subject: [PATCH 04/10] support booting from SD card
+Subject: [PATCH 04/11] support booting from SD card
 
 Change-Id: Ie67fafaeff7696e73bce5cb6afec27f50a4a2fea
 Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
