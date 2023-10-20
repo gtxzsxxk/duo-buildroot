@@ -43,10 +43,16 @@ jobs:
       with:
         name: rootfs.tar.xz
         path: output/images/rootfs.tar.xz
+
+    - name: Generate release tag
+      id: tag
+      run: |
+        echo "::set-output name=release_tag::BuildrootCI_$(date +"%Y.%m.%d_%H-%M")"
         
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
+        tag_name: ${{ steps.tag.outputs.release_tag }}
         files: |
           output/images/sdcard.img
           output/images/rootfs.tar.xz
