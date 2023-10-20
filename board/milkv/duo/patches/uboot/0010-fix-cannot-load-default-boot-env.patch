@@ -40,7 +40,7 @@ index 08b70193f..276681f97 100644
  	#define SD_BOOTM_COMMAND \
 -				SET_BOOTARGS \
 +				"set bootargs root=/dev/mmcblk0p2 rootwait rw " \
-+				"console=$consoledev,$baudrate earlycon=sbi loglevel=9 riscv.fwsz=0x80000" \
++				"console=$consoledev,$baudrate earlycon=sbi loglevel=9 riscv.fwsz=0x80000;" \
  				"echo Boot from SD ...;" \
  				"mmc dev 0 && fatload mmc 0 ${uImage_addr} boot.sd; " \
  				"if test $? -eq 0; then " \
