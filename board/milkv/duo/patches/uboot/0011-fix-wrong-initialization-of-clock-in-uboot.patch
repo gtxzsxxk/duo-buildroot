@@ -1,9 +1,9 @@
 From 5c542e11fc1da8698442d782e03e21ff35c093fd Mon Sep 17 00:00:00 2001
-From: Hanyuan Zhao <hanyuan-z@qq.com>
+From: Emil S <23244044+shodan8192@users.noreply.github.com>
 Date: Fri, 20 Oct 2023 13:15:18 +0800
 Subject: [PATCH 11/11] fix: wrong initialization of clock in uboot
 
-Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
+Signed-off-by: Emil S <23244044+shodan8192@users.noreply.github.com>
 ---
  .../include/dt-bindings/clock/cv180x-clock.h  | 304 +++++++++---------
  .../include/dt-bindings/clock/cv181x-clock.h  | 304 +++++++++---------
