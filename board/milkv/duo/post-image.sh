@@ -8,7 +8,7 @@
 ###########################################################
 
 if grep -Eq "^BR2_PACKAGE_MILKV_DUO_SMALLCORE_FREERTOS=y$" ${BR2_CONFIG}; then
-    ./fiptool.py genfip fip.bin \
+    ${BINARIES_DIR}/fiptool.py genfip ${BINARIES_DIR}/fip.bin \
     --MONITOR_RUNADDR=0x80000000 \
     --CHIP_CONF=${BINARIES_DIR}/chip_conf.bin \
     --NOR_INFO=FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF \
