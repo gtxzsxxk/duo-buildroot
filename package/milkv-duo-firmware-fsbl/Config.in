@@ -3,7 +3,7 @@ config BR2_PACKAGE_MILKV_DUO_FIRMWARE_FSBL
 	depends on BR2_PACKAGE_HOST_MTOOLS
 	help
 	  This package is obtained from
-	  https://github.com/gtxzsxxk/milkv-duo-firmware-fsbl,
+	  https://github.com/milkv-duo/duo-buildroot-sdk,
 	  from which we download the first stage bootloader source and
 	  compile it, generating the atf bl2.bin. At the mean time, we
 	  will use the fiptool.py in this package to create the binary
