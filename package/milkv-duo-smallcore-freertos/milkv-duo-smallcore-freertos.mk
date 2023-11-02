@@ -1,0 +1,117 @@
+################################################################################
+#
+# milkv-duo-smallcore-freertos
+#
+################################################################################
+
+MILKV_DUO_SMALLCORE_FREERTOS_VERSION = fb1fb0f6061a8a3397adaa90b5c1546527156313
+MILKV_DUO_SMALLCORE_FREERTOS_SITE = $(call github,gtxzsxxk,milkv-duo-smallcore-freertos,$(MILKV_DUO_SMALLCORE_FREERTOS_VERSION))
+MILKV_DUO_SMALLCORE_FREERTOS_INSTALL_STAGING = YES
+MILKV_DUO_SMALLCORE_FREERTOS_DEPENDENCIES = host-cmake host-ninja
+MILKV_DUO_SMALLCORE_FREERTOS_CONF_ENV = CROSS_COMPILE=$(TARGET_CROSS)
+
+TOP_DIR=$(@D)/cvitek
+TOOLCHAIN_FILE_PATH=$(@D)/cvitek/scripts/toolchain-riscv64-elf.cmake
+BUILD_FREERTOS_PATH=$(TOP_DIR)/build
+BUILD_ENV_PATH=$(BUILD_FREERTOS_PATH)
+INSTALL_PATH=$(TOP_DIR)/install
+RUN_TYPE=CVIRTOS
+RUN_CHIP=cv180x
+RUN_ARCH=riscv64
+
+define MILKV_DUO_SMALLCORE_FREERTOS_BUILD_CMDS
+	if [ ! -d $(BUILD_FREERTOS_PATH)/arch ]; then \
+		mkdir -p $(BUILD_FREERTOS_PATH)/arch; \
+	fi
+
+	cd $(BUILD_FREERTOS_PATH)/arch && \
+	$(TARGET_MAKE_ENV) $(MILKV_DUO_SMALLCORE_FREERTOS_CONF_ENV) $(BR2_CMAKE) -G Ninja -DCHIP=$(RUN_CHIP)  \
+		-DTOP_DIR=$(TOP_DIR) \
+		-DRUN_TYPE=$(RUN_TYPE) \
+		-DRUN_ARCH=$(RUN_ARCH) \
+		-DBUILD_ENV_PATH=$(BUILD_ENV_PATH) \
+		-DCMAKE_TOOLCHAIN_FILE=$(TOOLCHAIN_FILE_PATH) \
+		$(TOP_DIR)/arch
+	cd $(BUILD_FREERTOS_PATH)/arch && $(TARGET_MAKE_ENV) $(MILKV_DUO_SMALLCORE_FREERTOS_CONF_ENV) $(BR2_CMAKE) --build . --target install -- -v
+
+	if [ ! -d $(BUILD_FREERTOS_PATH)/kernel ]; then \
+		mkdir -p $(BUILD_FREERTOS_PATH)/kernel; \
+	fi
+
+	cd $(BUILD_FREERTOS_PATH)/kernel && \
+	$(TARGET_MAKE_ENV) $(MILKV_DUO_SMALLCORE_FREERTOS_CONF_ENV) $(BR2_CMAKE) -G Ninja -DCHIP=$(RUN_CHIP)  \
+		-DRUN_ARCH=$(RUN_ARCH) \
+		-DTOP_DIR=$(TOP_DIR) \
+		-DBUILD_ENV_PATH=$(BUILD_ENV_PATH) \
+		-DCMAKE_TOOLCHAIN_FILE=$(TOOLCHAIN_FILE_PATH) \
+		$(TOP_DIR)/kernel
+	cd $(BUILD_FREERTOS_PATH)/kernel && $(TARGET_MAKE_ENV) $(MILKV_DUO_SMALLCORE_FREERTOS_CONF_ENV) $(BR2_CMAKE) --build . --target install -- -v
+
+	if [ ! -d $(BUILD_FREERTOS_PATH)/common ]; then \
+		mkdir -p $(BUILD_FREERTOS_PATH)/common; \
+	fi
+
+	cd $(BUILD_FREERTOS_PATH)/common && \
+	$(TARGET_MAKE_ENV) $(MILKV_DUO_SMALLCORE_FREERTOS_CONF_ENV) $(BR2_CMAKE) -G Ninja -DCHIP=$(RUN_CHIP)  \
+		-DRUN_ARCH=$(RUN_ARCH) \
+		-DTOP_DIR=$(TOP_DIR) \
+		-DBUILD_ENV_PATH=$(BUILD_ENV_PATH) \
+		-DCMAKE_TOOLCHAIN_FILE=$(TOOLCHAIN_FILE_PATH) \
+		$(TOP_DIR)/common
+	cd $(BUILD_FREERTOS_PATH)/common && $(TARGET_MAKE_ENV) $(MILKV_DUO_SMALLCORE_FREERTOS_CONF_ENV) $(BR2_CMAKE) --build . --target install -- -v
+
+	if [ ! -d $(BUILD_FREERTOS_PATH)/hal ]; then \
+		mkdir -p $(BUILD_FREERTOS_PATH)/hal; \
+	fi
+
+	cd $(BUILD_FREERTOS_PATH)/hal && \
+	$(TARGET_MAKE_ENV) $(MILKV_DUO_SMALLCORE_FREERTOS_CONF_ENV) $(BR2_CMAKE) -G Ninja -DCHIP=$(RUN_CHIP)  \
+		-DRUN_ARCH=$(RUN_ARCH) \
+		-DTOP_DIR=$(TOP_DIR) \
+		-DRUN_TYPE=$(RUN_TYPE) \
+		-DBUILD_ENV_PATH=$(BUILD_ENV_PATH) \
+		-DCMAKE_TOOLCHAIN_FILE=$(TOOLCHAIN_FILE_PATH) \
+		-DBOARD_FPGA=n \
+		$(TOP_DIR)/hal/$(RUN_CHIP)
+	cd $(BUILD_FREERTOS_PATH)/hal && $(TARGET_MAKE_ENV) $(MILKV_DUO_SMALLCORE_FREERTOS_CONF_ENV) $(BR2_CMAKE) --build . --target install -- -v
+
+	if [ ! -d $(BUILD_FREERTOS_PATH)/driver ]; then \
+		mkdir -p $(BUILD_FREERTOS_PATH)/driver; \
+	fi
+
+	cd $(BUILD_FREERTOS_PATH)/driver && \
+	$(TARGET_MAKE_ENV) $(MILKV_DUO_SMALLCORE_FREERTOS_CONF_ENV) $(BR2_CMAKE) -G Ninja -DCHIP=$(RUN_CHIP)  \
+		-DRUN_ARCH=$(RUN_ARCH) \
+		-DTOP_DIR=$(TOP_DIR) \
+		-DRUN_TYPE=$(RUN_TYPE) \
+		-DBUILD_ENV_PATH=$(BUILD_ENV_PATH) \
+		-DBOARD_FPGA=n \
+		-DCMAKE_TOOLCHAIN_FILE=$(TOOLCHAIN_FILE_PATH) \
+		$(TOP_DIR)/driver
+	cd $(BUILD_FREERTOS_PATH)/driver && $(TARGET_MAKE_ENV) $(MILKV_DUO_SMALLCORE_FREERTOS_CONF_ENV) $(BR2_CMAKE) --build . --target install -- -v
+
+	if [ ! -d $(BUILD_FREERTOS_PATH)/task ]; then \
+		mkdir -p $(BUILD_FREERTOS_PATH)/task; \
+	fi
+
+	cd $(BUILD_FREERTOS_PATH)/task && \
+	$(TARGET_MAKE_ENV) $(MILKV_DUO_SMALLCORE_FREERTOS_CONF_ENV) $(BR2_CMAKE) -G Ninja -DCHIP=$(RUN_CHIP)  \
+		-DRUN_ARCH=$(RUN_ARCH) \
+		-DRUN_TYPE=$(RUN_TYPE) \
+		-DTOP_DIR=$(TOP_DIR) \
+		-DBUILD_ENV_PATH=$(BUILD_ENV_PATH) \
+		-DBOARD_FPGA=n \
+		-DCMAKE_TOOLCHAIN_FILE=$(TOOLCHAIN_FILE_PATH) \
+		$(TOP_DIR)/task
+	cd $(BUILD_FREERTOS_PATH)/task && $(TARGET_MAKE_ENV) $(MILKV_DUO_SMALLCORE_FREERTOS_CONF_ENV) $(BR2_CMAKE) --build . --target install -- -v
+	cd $(BUILD_FREERTOS_PATH)/task && $(TARGET_MAKE_ENV) $(MILKV_DUO_SMALLCORE_FREERTOS_CONF_ENV) $(BR2_CMAKE) --build . --target cvirtos.bin -- -v
+endef
+
+define MILKV_DUO_SMALLCORE_FREERTOS_INSTALL_STAGING_CMDS
+	$(INSTALL) -D -m 0755 $(TOP_DIR)/install/bin/cvirtos.bin $(BINARIES_DIR)/cvirtos.bin
+	if [ ! -e $(BINARIES_DIR)/empty.bin ]; then \
+		touch $(BINARIES_DIR)/empty.bin; \
+	fi
+endef
+
+$(eval $(generic-package))
