@@ -1,0 +1,10 @@
+config BR2_PACKAGE_MILKV_DUO_PINMUX
+    bool "milkv-duo-pinmux"
+    help
+      This package is obtained from
+      https://github.com/milkv-duo/duo-buildroot-sdk
+      from which we download source code of duo-pinmux.
+      This tool can get or set function of any Milk-V Duo GPIO pin.
+      More info at https://milkv.io/docs/duo/application-development/pinmux
+
+      https://github.com/shodan8192/milkv-duo-pinmux
