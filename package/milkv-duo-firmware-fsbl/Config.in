@@ -9,4 +9,7 @@ config BR2_PACKAGE_MILKV_DUO_FIRMWARE_FSBL
 	  will use the fiptool.py in this package to create the binary
 	  file fip.bin to pack the opensbi, u-boot and so on.
 
+	  If you are using Buildroot to generate the whole SD card
+	  Image or the fip.bin, you must say Y to this package!
+
 	  https://github.com/gtxzsxxk/milkv-duo-firmware-fsbl
