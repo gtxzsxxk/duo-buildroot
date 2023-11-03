@@ -1,6 +1,7 @@
 config BR2_PACKAGE_MILKV_DUO_SMALLCORE_FREERTOS
 	bool "milkv-duo-smallcore-freertos"
-	depends on BR2_PACKAGE_HOST_CMAKE
+	depends on BR2_PACKAGE_MILKV_DUO_FIRMWARE_FSBL
+	select BR2_PACKAGE_HOST_CMAKE
 	help
 	  This package is obtained from
 	  https://github.com/milkv-duo/duo-buildroot-sdk,
