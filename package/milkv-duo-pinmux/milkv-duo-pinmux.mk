@@ -1,3 +1,9 @@
+################################################################################
+#
+# milkv-duo-pinmux
+#
+################################################################################
+
 MILKV_DUO_PINMUX_VERSION = c0e32327aaf13490437f485a3fb04bbb4c60f00f
 MILKV_DUO_PINMUX_SITE = $(call github,shodan8192,milkv-duo-pinmux,$(MILKV_DUO_PINMUX_VERSION))
 
