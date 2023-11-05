@@ -5,7 +5,7 @@
 ################################################################################
 
 MILKV_DUO_PINMUX_VERSION = c0e32327aaf13490437f485a3fb04bbb4c60f00f
-MILKV_DUO_PINMUX_SITE = $(call github,shodan8192,milkv-duo-pinmux,$(MILKV_DUO_PINMUX_VERSION))
+MILKV_DUO_PINMUX_SITE = $(call github,milkv-duo,milkv-duo-pinmux,$(MILKV_DUO_PINMUX_VERSION))
 
 define MILKV_DUO_PINMUX_BUILD_CMDS
 	$(TARGET_MAKE_ENV) $(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_LDFLAGS) \
