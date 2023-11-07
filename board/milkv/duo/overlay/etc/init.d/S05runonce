@@ -16,6 +16,7 @@ case "$1" in
                 if "$file" >> /tmp/runonce.log 2>&1
                 then
                         mv "$file" "/etc/runonce.d/ran/"
+                        sync
                 fi
         done
         ;;
