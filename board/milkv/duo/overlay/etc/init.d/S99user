@@ -11,11 +11,6 @@ source ${CONFIG}
 case "$1" in
   start)
 
-        if [ "$ENABLE_SWAP" == "1" ]; then
-        mkswap /dev/mmcblk0p3
-        swapon /dev/mmcblk0p3
-        fi
-
         echo "Starting app..."
 
         if [ -f $SYSTEMPATH/duo-init.sh ]; then
