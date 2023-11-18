@@ -1,0 +1,26 @@
+From 5604343cb0f9b75a467299262889e21f302572d3 Mon Sep 17 00:00:00 2001
+From: Hanyuan Zhao <hanyuan-z@qq.com>
+Date: Mon, 16 Oct 2023 19:07:28 +0800
+Subject: [PATCH 08/11] fix: the return type mismatches with its declaration
+
+Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
+---
+ common/command.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/common/command.c b/common/command.c
+index 95af73f17..0e9c1ba49 100644
+--- a/common/command.c
++++ b/common/command.c
+@@ -583,7 +583,7 @@ static int cmd_call(struct cmd_tbl *cmdtp, int flag, int argc,
+ 	return result;
+ }
+ 
+-enum command_ret_t cmd_process(int flag, int argc, char *const argv[],
++int cmd_process(int flag, int argc, char *const argv[],
+ 			       int *repeatable, ulong *ticks)
+ {
+ 	enum command_ret_t rc = CMD_RET_SUCCESS;
+-- 
+2.34.1
+

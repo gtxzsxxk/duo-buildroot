@@ -1,0 +1,565 @@
+From 909f5d4edb584d2868726ca5ada3be4a6c5b7492 Mon Sep 17 00:00:00 2001
+From: "wangliang.wang" <wangliang.wang@sophgo.com>
+Date: Fri, 10 Mar 2023 00:06:05 +0800
+Subject: [PATCH 02/11] [build] Upgrade the MMF SDK from V4.0.0 to V4.1.0 
+ 1. Delete some useless files 	2. Add .gitignore file 	3. add cv181x board
+ configs
+
+Change-Id: I1f09f71cfa2cc6ee9ab5d8ad3d3570a48a9e9ba3
+Signed-off-by: Hanyuan Zhao <hanyuan-z@qq.com>
+---
+ doc/build/clang.rst            |  76 ----------
+ doc/build/docker.rst           |  14 --
+ doc/build/gcc.rst              | 141 ------------------
+ doc/build/index.rst            |  13 --
+ doc/build/source.rst           |  30 ----
+ doc/build/tools.rst            |  47 ------
+ .../tools/patman/test/0000-cover-letter.patch |  23 ---
+ .../0001-pci-Correct-cast-for-sandbox.patch   |  51 -------
+ ...-for-sandbox-in-fdtdec_setup_mem_siz.patch |  83 -----------
+ 10 files changed, 478 deletions(-)
+ delete mode 100644 doc/build/clang.rst
+ delete mode 100644 doc/build/docker.rst
+ delete mode 100644 doc/build/gcc.rst
+ delete mode 100644 doc/build/index.rst
+ delete mode 100644 doc/build/source.rst
+ delete mode 100644 doc/build/tools.rst
+ delete mode 100644 tools/patman/test/0000-cover-letter.patch
+ delete mode 100644 tools/patman/test/0001-pci-Correct-cast-for-sandbox.patch
+ delete mode 100644 tools/patman/test/0002-fdt-Correct-cast-for-sandbox-in-fdtdec_setup_mem_siz.patch
+
+diff --git a/doc/build/clang.rst b/doc/build/clang.rst
+deleted file mode 100644
+index 1d35616eb..000000000
+--- a/doc/build/clang.rst
++++ /dev/null
+@@ -1,76 +0,0 @@
+-Building with Clang
+-===================
+-
+-The biggest problem when trying to compile U-Boot with Clang is that almost all
+-archs rely on storing gd in a global register and the Clang 3.5 user manual
+-states: "Clang does not support global register variables; this is unlikely to
+-be implemented soon because it requires additional LLVM backend support."
+-
+-The ARM backend can be instructed not to use the r9 and x18 registers using
+--ffixed-r9 or -ffixed-x18 respectively. As global registers themselves are not
+-supported inline assembly is needed to get and set the r9 or x18 value. This
+-leads to larger code then strictly necessary, but at least works.
+-
+-**NOTE:** target compilation only work for _some_ ARM boards at the moment.
+-Also AArch64 is not supported currently due to a lack of private libgcc
+-support. Boards which reassign gd in c will also fail to compile, but there is
+-in no strict reason to do so in the ARM world, since crt0.S takes care of this.
+-These assignments can be avoided by changing the init calls but this is not in
+-mainline yet.
+-
+-
+-Debian based
+-------------
+-
+-Required packages can be installed via apt, e.g.
+-
+-.. code-block:: bash
+-
+-    sudo apt-get install clang
+-
+-Note that we still use binutils for some tools so we must continue to set
+-CROSS_COMPILE. To compile U-Boot with Clang on Linux without IAS use e.g.
+-
+-.. code-block:: bash
+-
+-    make HOSTCC=clang rpi_2_defconfig
+-    make HOSTCC=clang CROSS_COMPILE=arm-linux-gnueabi- \
+-         CC="clang -target arm-linux-gnueabi" -j8
+-
+-It can also be used to compile sandbox:
+-
+-.. code-block:: bash
+-
+-    make HOSTCC=clang sandbox_defconfig
+-    make HOSTCC=clang CC=clang -j8
+-
+-
+-FreeBSD 11
+-----------
+-
+-Since llvm 3.4 is currently in the base system, the integrated assembler as
+-is incapable of building U-Boot. Therefore gas from devel/arm-gnueabi-binutils
+-is used instead. It needs a symlink to be picked up correctly though:
+-
+-.. code-block:: bash
+-
+-    ln -s /usr/local/bin/arm-gnueabi-freebsd-as /usr/bin/arm-freebsd-eabi-as
+-
+-The following commands compile U-Boot using the Clang xdev toolchain.
+-
+-**NOTE:** CROSS_COMPILE and target differ on purpose!
+-
+-.. code-block:: bash
+-
+-    export CROSS_COMPILE=arm-gnueabi-freebsd-
+-    gmake rpi_2_defconfig
+-    gmake CC="clang -target arm-freebsd-eabi --sysroot /usr/arm-freebsd" -j8
+-
+-Given that U-Boot will default to gcc, above commands can be
+-simplified with a simple wrapper script - saved as
+-/usr/local/bin/arm-gnueabi-freebsd-gcc - listed below:
+-
+-.. code-block:: bash
+-
+-    #!/bin/sh
+-    exec clang -target arm-freebsd-eabi --sysroot /usr/arm-freebsd "$@"
+diff --git a/doc/build/docker.rst b/doc/build/docker.rst
+deleted file mode 100644
+index 953d1b28a..000000000
+--- a/doc/build/docker.rst
++++ /dev/null
+@@ -1,14 +0,0 @@
+-GitLab CI / U-Boot runner container
+-===================================
+-
+-In order to have a reproducible and portable build environment for CI we use a container for building in.  This means that developers can also reproduce the CI environment, to a large degree at least, locally.  This file is located in the tools/docker directory.  To build the image yourself
+-
+-.. code-block:: bash
+-
+-    sudo docker build -t your-namespace:your-tag .
+-
+-Or to use an existing container
+-
+-.. code-block:: bash
+-
+-    sudo docker pull trini/u-boot-gitlab-ci-runner:bionic-20200807-02Sep2020
+diff --git a/doc/build/gcc.rst b/doc/build/gcc.rst
+deleted file mode 100644
+index 0cdc307d5..000000000
+--- a/doc/build/gcc.rst
++++ /dev/null
+@@ -1,141 +0,0 @@
+-Building with GCC
+-=================
+-
+-Dependencies
+-------------
+-
+-For building U-Boot you need a GCC compiler for your host platform. If you
+-are not building on the target platform you further need  a GCC cross compiler.
+-
+-Debian based
+-~~~~~~~~~~~~
+-
+-On Debian based systems the cross compiler packages are named
+-gcc-<architecture>-linux-gnu.
+-
+-You could install GCC and the GCC cross compiler for the ARMv8 architecture with
+-
+-.. code-block:: bash
+-
+-    sudo apt-get install gcc gcc-aarch64-linux-gnu
+-
+-Depending on the build targets further packages maybe needed
+-
+-.. code-block:: bash
+-
+-    sudo apt-get install bc bison build-essential coccinelle \
+-      device-tree-compiler dfu-util efitools flex gdisk graphviz imagemagick \
+-      liblz4-tool libguestfs-tools libncurses-dev libpython3-dev libsdl2-dev \
+-      libssl-dev lz4 lzma lzma-alone openssl pkg-config python3 \
+-      python3-coverage python3-pycryptodome python3-pyelftools python3-pytest \
+-      python3-sphinxcontrib.apidoc python3-sphinx-rtd-theme python3-virtualenv \
+-      swig
+-
+-SUSE based
+-~~~~~~~~~~
+-
+-On suse based systems the cross compiler packages are named
+-cross-<architecture>-gcc<version>.
+-
+-You could install GCC and the GCC 10 cross compiler for the ARMv8 architecture
+-with
+-
+-.. code-block:: bash
+-
+-    sudo zypper install gcc cross-aarch64-gcc10
+-
+-Depending on the build targets further packages maybe needed.
+-
+-.. code-block:: bash
+-
+-    zypper install bc bison flex gcc libopenssl-devel libSDL2-devel make \
+-      ncurses-devel python3-devel python3-pytest swig
+-
+-Prerequisites
+--------------
+-
+-For some boards you have to build prerequisite files before you can build
+-U-Boot, e.g. for the some boards you will need to build the ARM Trusted Firmware
+-beforehand. Please, refer to the board specific documentation
+-:doc:`../board/index`.
+-
+-Configuration
+--------------
+-
+-Directory configs/ contains the template configuration files for the maintained
+-boards following the naming scheme::
+-
+-    <board name>_defconfig
+-
+-These files have been stripped of default settings. So you cannot use them
+-directly. Instead their name serves as a make target to generate the actual
+-configuration file .config. For instance the configuration template for the
+-Odroid C2 board is called odroid-c2_defconfig. The corresponding .config file
+-is generated by
+-
+-.. code-block:: bash
+-
+-    make odroid-c2_defconfig
+-
+-You can adjust the configuration using
+-
+-.. code-block:: bash
+-
+-    make menuconfig
+-
+-Building
+---------
+-
+-When cross compiling you will have to specify the prefix of the cross-compiler.
+-You can either specify the value of the CROSS_COMPILE variable on the make
+-command line or export it beforehand.
+-
+-.. code-block:: bash
+-
+-    CROSS_COMPILE=<compiler-prefix> make
+-
+-Assuming cross compiling on Debian for ARMv8 this would be
+-
+-.. code-block:: bash
+-
+-    CROSS_COMPILE=aarch64-linux-gnu- make
+-
+-Build parameters
+-~~~~~~~~~~~~~~~~
+-
+-A list of available parameters for the make command can be obtained via
+-
+-.. code-block:: bash
+-
+-    make help
+-
+-You can speed up compilation by parallelization using the -j parameter, e.g.
+-
+-.. code-block:: bash
+-
+-    CROSS_COMPILE=aarch64-linux-gnu- make -j$(nproc)
+-
+-Further important build parameters are
+-
+-* O=<dir> - generate all output files in directory <dir>, including .config
+-* V=1 - verbose build
+-
+-Other build targets
+-~~~~~~~~~~~~~~~~~~~
+-
+-A list of all make targets can be obtained via
+-
+-.. code-block:: bash
+-
+-    make help
+-
+-Important ones are
+-
+-* clean - remove most generated files but keep the configuration
+-* mrproper - remove all generated files + config + various backup files
+-
+-Installation
+-------------
+-
+-The process for installing U-Boot on the target device is device specific.
+-Please, refer to the board specific documentation :doc:`../board/index`.
+diff --git a/doc/build/index.rst b/doc/build/index.rst
+deleted file mode 100644
+index 69952f90d..000000000
+--- a/doc/build/index.rst
++++ /dev/null
+@@ -1,13 +0,0 @@
+-.. SPDX-License-Identifier: GPL-2.0+
+-
+-Build U-Boot
+-============
+-
+-.. toctree::
+-   :maxdepth: 2
+-
+-   source
+-   gcc
+-   clang
+-   docker
+-   tools
+diff --git a/doc/build/source.rst b/doc/build/source.rst
+deleted file mode 100644
+index 470f79398..000000000
+--- a/doc/build/source.rst
++++ /dev/null
+@@ -1,30 +0,0 @@
+-Obtaining the source
+-=====================
+-
+-The source of the U-Boot project is maintained in a Git repository.
+-
+-You can download the source via
+-
+-.. code-block:: bash
+-
+-    git clone https://source.denx.de/u-boot/u-boot.git
+-
+-A mirror of the source is maintained on Github
+-
+-.. code-block:: bash
+-
+-    git clone https://github.com/u-boot/u-boot
+-
+-The released versions are available as tags which use the naming scheme::
+-
+-    v<year>.<month>
+-
+-Release candidates are named::
+-
+-    v<year>.<month>-rc<number>
+-
+-To checkout the October 2020 release you would use:
+-
+-.. code-block:: bash
+-
+-    git checkout v2020.10
+diff --git a/doc/build/tools.rst b/doc/build/tools.rst
+deleted file mode 100644
+index c06f91527..000000000
+--- a/doc/build/tools.rst
++++ /dev/null
+@@ -1,47 +0,0 @@
+-.. SPDX-License-Identifier: GPL-2.0+
+-.. sectionauthor:: Bin Meng <bmeng.cn@gmail.com>
+-
+-Host tools
+-==========
+-
+-Building tools for Linux
+-------------------------
+-
+-To allow distributions to distribute all possible tools in a generic way,
+-avoiding the need of specific tools building for each machine, a tools only
+-defconfig file is provided.
+-
+-Using this, we can build the tools by doing::
+-
+-   $ make tools-only_defconfig
+-   $ make tools-only
+-
+-Building tools for Windows
+---------------------------
+-If you wish to generate Windows versions of the utilities in the tools directory
+-you can use MSYS2, a software distro and building platform for Windows.
+-
+-Download the MSYS2 installer from https://www.msys2.org. Make sure you have
+-installed all required packages below in order to build these host tools::
+-
+-   * gcc (9.1.0)
+-   * make (4.2.1)
+-   * bison (3.4.2)
+-   * diffutils (3.7)
+-   * openssl-devel (1.1.1.d)
+-
+-Note the version numbers in these parentheses above are the package versions
+-at the time being when writing this document. The MSYS2 installer tested is
+-http://repo.msys2.org/distrib/x86_64/msys2-x86_64-20190524.exe.
+-
+-There are 3 MSYS subsystems installed: MSYS2, MinGW32 and MinGW64. Each
+-subsystem provides an environment to build Windows applications. The MSYS2
+-environment is for building POSIX compliant software on Windows using an
+-emulation layer. The MinGW32/64 subsystems are for building native Windows
+-applications using a linux toolchain (gcc, bash, etc), targeting respectively
+-32 and 64 bit Windows.
+-
+-Launch the MSYS2 shell of the MSYS2 environment, and do the following::
+-
+-   $ make tools-only_defconfig
+-   $ make tools-only NO_SDL=1
+diff --git a/tools/patman/test/0000-cover-letter.patch b/tools/patman/test/0000-cover-letter.patch
+deleted file mode 100644
+index c99e63562..000000000
+--- a/tools/patman/test/0000-cover-letter.patch
++++ /dev/null
+@@ -1,23 +0,0 @@
+-From 5ab48490f03051875ab13d288a4bf32b507d76fd Mon Sep 17 00:00:00 2001
+-From: Simon Glass <sjg@chromium.org>
+-Date: Sat, 27 May 2017 20:52:11 -0600
+-Subject: [RFC 0/2] *** SUBJECT HERE ***
+-MIME-Version: 1.0
+-Content-Type: text/plain; charset=UTF-8
+-Content-Transfer-Encoding: 8bit
+-
+-*** BLURB HERE ***
+-
+-Simon Glass (2):
+-  pci: Correct cast for sandbox
+-  fdt: Correct cast for sandbox in fdtdec_setup_mem_size_base()
+-
+- cmd/pci.c                   | 3 ++-
+- fs/fat/fat.c                | 1 +
+- lib/efi_loader/efi_memory.c | 1 +
+- lib/fdtdec.c                | 3 ++-
+- 4 files changed, 6 insertions(+), 2 deletions(-)
+-
+--- 
+-2.7.4
+-
+diff --git a/tools/patman/test/0001-pci-Correct-cast-for-sandbox.patch b/tools/patman/test/0001-pci-Correct-cast-for-sandbox.patch
+deleted file mode 100644
+index 038943c2c..000000000
+--- a/tools/patman/test/0001-pci-Correct-cast-for-sandbox.patch
++++ /dev/null
+@@ -1,51 +0,0 @@
+-From b9da5f937bd5ea4931ea17459bf79b2905d9594d Mon Sep 17 00:00:00 2001
+-From: Simon Glass <sjg@chromium.org>
+-Date: Sat, 15 Apr 2017 15:39:08 -0600
+-Subject: [RFC 1/2] pci: Correct cast for sandbox
+-MIME-Version: 1.0
+-Content-Type: text/plain; charset=UTF-8
+-Content-Transfer-Encoding: 8bit
+-
+-This gives a warning with some native compilers:
+-
+-cmd/pci.c:152:11: warning: format ‘%llx’ expects argument of type
+-   ‘long long unsigned int’, but argument 3 has type
+-   ‘u64 {aka long unsigned int}’ [-Wformat=]
+-
+-Fix it with a cast.
+-
+-Signed-off-by: Simon Glass <sjg@chromium.org>
+-Commit-changes: 2
+-- Changes only for this commit
+-
+-Series-notes:
+-some notes
+-about some things
+-from the first commit
+-END
+-
+-Commit-notes:
+-Some notes about
+-the first commit
+-END
+----
+- cmd/pci.c | 3 ++-
+- 1 file changed, 2 insertions(+), 1 deletion(-)
+-
+-diff --git a/cmd/pci.c b/cmd/pci.c
+-index 41b4fff..fe27b4f 100644
+---- a/cmd/pci.c
+-+++ b/cmd/pci.c
+-@@ -150,7 +150,8 @@ int pci_bar_show(struct udevice *dev)
+- 		if ((!is_64 && size_low) || (is_64 && size)) {
+- 			size = ~size + 1;
+- 			printf(" %d   %#016llx  %#016llx  %d     %s   %s\n",
+--			       bar_id, base, size, is_64 ? 64 : 32,
+-+			       bar_id, (unsigned long long)base,
+-+			       (unsigned long long)size, is_64 ? 64 : 32,
+- 			       is_io ? "I/O" : "MEM",
+- 			       prefetchable ? "Prefetchable" : "");
+- 		}
+--- 
+-2.7.4
+-
+diff --git a/tools/patman/test/0002-fdt-Correct-cast-for-sandbox-in-fdtdec_setup_mem_siz.patch b/tools/patman/test/0002-fdt-Correct-cast-for-sandbox-in-fdtdec_setup_mem_siz.patch
+deleted file mode 100644
+index 56278a6ce..000000000
+--- a/tools/patman/test/0002-fdt-Correct-cast-for-sandbox-in-fdtdec_setup_mem_siz.patch
++++ /dev/null
+@@ -1,83 +0,0 @@
+-From 5ab48490f03051875ab13d288a4bf32b507d76fd Mon Sep 17 00:00:00 2001
+-From: Simon Glass <sjg@chromium.org>
+-Date: Sat, 15 Apr 2017 15:39:08 -0600
+-Subject: [RFC 2/2] fdt: Correct cast for sandbox in fdtdec_setup_mem_size_base()
+-MIME-Version: 1.0
+-Content-Type: text/plain; charset=UTF-8
+-Content-Transfer-Encoding: 8bit
+-
+-This gives a warning with some native compilers:
+-
+-lib/fdtdec.c:1203:8: warning: format ‘%llx’ expects argument of type
+-   ‘long long unsigned int’, but argument 3 has type
+-   ‘long unsigned int’ [-Wformat=]
+-
+-Fix it with a cast.
+-
+-Signed-off-by: Simon Glass <sjg@chromium.org>
+-Series-to: u-boot
+-Series-prefix: RFC
+-Series-cc: Stefan Brüns <stefan.bruens@rwth-aachen.de>
+-Cover-letter-cc: Lord Mëlchett <clergy@palace.gov>
+-Series-version: 3
+-Patch-cc: fred
+-Series-process-log: sort, uniq
+-Series-changes: 4
+-- Some changes
+-- Multi
+-  line
+-  change
+-
+-Commit-changes: 2
+-- Changes only for this commit
+-
+-Cover-changes: 4
+-- Some notes for the cover letter
+-
+-Cover-letter:
+-test: A test patch series
+-This is a test of how the cover
+-letter
+-works
+-END
+----
+- fs/fat/fat.c                | 1 +
+- lib/efi_loader/efi_memory.c | 1 +
+- lib/fdtdec.c                | 3 ++-
+- 3 files changed, 4 insertions(+), 1 deletion(-)
+-
+-diff --git a/fs/fat/fat.c b/fs/fat/fat.c
+-index a71bad1..ba169dc 100644
+---- a/fs/fat/fat.c
+-+++ b/fs/fat/fat.c
+-@@ -1,3 +1,4 @@
+-+
+- /*
+-  * fat.c
+-  *
+-diff --git a/lib/efi_loader/efi_memory.c b/lib/efi_loader/efi_memory.c
+-index db2ae19..05f75d1 100644
+---- a/lib/efi_loader/efi_memory.c
+-+++ b/lib/efi_loader/efi_memory.c
+-@@ -1,3 +1,4 @@
+-+
+- /*
+-  *  EFI application memory management
+-  *
+-diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+-index c072e54..942244f 100644
+---- a/lib/fdtdec.c
+-+++ b/lib/fdtdec.c
+-@@ -1200,7 +1200,8 @@ int fdtdec_setup_mem_size_base(void)
+- 	}
+- 
+- 	gd->ram_size = (phys_size_t)(res.end - res.start + 1);
+--	debug("%s: Initial DRAM size %llx\n", __func__, (u64)gd->ram_size);
+-+	debug("%s: Initial DRAM size %llx\n", __func__,
+-+	      (unsigned long long)gd->ram_size);
+- 
+- 	return 0;
+- }
+--- 
+-2.7.4
+-
+-- 
+2.34.1
+
