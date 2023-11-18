@@ -5,34 +5,14 @@ ${CVI_SHOPTS}
 # Start firmware
 #
 export SYSTEMPATH=/opt/milkv-duo/
-CONFIG=/etc/milkv-duo.conf
-source ${CONFIG}
 
 case "$1" in
   start)
 
         echo "Starting app..."
 
-        if [ -f $SYSTEMPATH/duo-init.sh ]; then
-                . $SYSTEMPATH/duo-init.sh &
-        fi
-
         if [ -f $SYSTEMPATH/blink.sh ]; then
                 . $SYSTEMPATH/blink.sh &
-        fi
-
-        if [ "$DUO_USB_FUNC" == "RNDIS" ]; then
-                if [ -f $SYSTEMPATH/usb-rndis.sh ]; then
-                        . $SYSTEMPATH/usb-rndis.sh &
-                fi
-        elif [ "$DUO_USB_FUNC" == "HOST" ]; then
-                if [ -f $SYSTEMPATH/usb-host.sh ]; then
-                        . $SYSTEMPATH/usb-host.sh &
-                fi
-        elif [ "$DUO_USB_FUNC" == "MASS-STORAGE" ]; then
-                if [ -f $SYSTEMPATH/usb-mass-storage.sh ]; then
-                        . $SYSTEMPATH/usb-mass-storage.sh &
-                fi
         fi
         ;;
   stop)
